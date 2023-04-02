@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0wc2x5o" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.6.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.18.0">
+  <bpmn:process id="TFG2Proces_start" name="TFG2Proces_start" isExecutable="true">
+    <bpmn:sequenceFlow id="Flow_0vf1ua2" sourceRef="StartEvent_1" targetRef="genereerPDFFormulier" />
+    <bpmn:sequenceFlow id="Flow_08cf5tw" sourceRef="genereerPDFFormulier" targetRef="kwaliteitscontroleSubProces" />
+    <bpmn:callActivity id="kwaliteitscontroleSubProces" name="Kwaliteits&#10;controle" calledElement="kwacoProces">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="Input_3f4r1mo" />
+        </camunda:inputOutput>
+        <camunda:executionListener delegateExpression="${procesStapListener}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_08cf5tw</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vxhu58</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:boundaryEvent id="catchKwacoError" name="Catch Kwaco error" attachedToRef="kwaliteitscontroleSubProces">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${procesStapListener}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_07bojr9</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_152kypg" errorRef="Error_0417nm9" camunda:errorCodeVariable="errorCode" camunda:errorMessageVariable="errorMessage" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_07bojr9" sourceRef="catchKwacoError" targetRef="ZetErrorStatus" />
+    <bpmn:endEvent id="Event_0sunxfq">
+      <bpmn:incoming>Flow_16mcipa</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0isk9br" sourceRef="ZetErrorStatus" targetRef="procesAfrondenMessage" />
+    <bpmn:sequenceFlow id="Flow_0vxhu58" sourceRef="kwaliteitscontroleSubProces" targetRef="delenKeten" />
+    <bpmn:sequenceFlow id="Flow_127z64f" sourceRef="delenKeten" targetRef="procesAfrondenMessage" />
+    <bpmn:intermediateCatchEvent id="procesAfrondenMessage" name="Proces afronden">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${procesStapListener}" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_127z64f</bpmn:incoming>
+      <bpmn:incoming>Flow_0isk9br</bpmn:incoming>
+      <bpmn:outgoing>Flow_16mcipa</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0el01fm" messageRef="Message_0ukpcdl" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_16mcipa" sourceRef="procesAfrondenMessage" targetRef="Event_0sunxfq" />
+    <bpmn:serviceTask id="genereerPDFFormulier" name="Genereer PDF formulier" camunda:delegateExpression="${doeIetsDelegate}">
+      <bpmn:incoming>Flow_0vf1ua2</bpmn:incoming>
+      <bpmn:outgoing>Flow_08cf5tw</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="ZetErrorStatus" name="Zet error status" camunda:delegateExpression="${doeIetsDelegate}">
+      <bpmn:incoming>Flow_07bojr9</bpmn:incoming>
+      <bpmn:outgoing>Flow_0isk9br</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="delenKeten" name="Delen Keten" camunda:delegateExpression="${doeIetsDelegate}">
+      <bpmn:incoming>Flow_0vxhu58</bpmn:incoming>
+      <bpmn:outgoing>Flow_127z64f</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0vf1ua2</bpmn:outgoing>
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmn:error id="Error_0417nm9" name="kwacoError" errorCode="-999" camunda:errorMessage="Kwaco fout" />
+  <bpmn:message id="Message_0ukpcdl" name="procesAfrondenMessage" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TFG2Proces_start">
+      <bpmndi:BPMNShape id="Activity_0m2876q_di" bpmnElement="kwaliteitscontroleSubProces">
+        <dc:Bounds x="430" y="237" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0sunxfq_di" bpmnElement="Event_0sunxfq">
+        <dc:Bounds x="842" y="259" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_00mpkic_di" bpmnElement="procesAfrondenMessage">
+        <dc:Bounds x="762" y="259" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="741" y="302" width="81" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16ycajr_di" bpmnElement="genereerPDFFormulier">
+        <dc:Bounds x="270" y="237" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_12klkkt_di" bpmnElement="ZetErrorStatus">
+        <dc:Bounds x="430" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0e58gnf_di" bpmnElement="delenKeten">
+        <dc:Bounds x="600" y="237" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0mdql00_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="259" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0qie846_di" bpmnElement="catchKwacoError">
+        <dc:Bounds x="462" y="219" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="487" y="196" width="65" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0vf1ua2_di" bpmnElement="Flow_0vf1ua2">
+        <di:waypoint x="215" y="277" />
+        <di:waypoint x="270" y="277" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08cf5tw_di" bpmnElement="Flow_08cf5tw">
+        <di:waypoint x="370" y="277" />
+        <di:waypoint x="430" y="277" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07bojr9_di" bpmnElement="Flow_07bojr9">
+        <di:waypoint x="480" y="219" />
+        <di:waypoint x="480" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0isk9br_di" bpmnElement="Flow_0isk9br">
+        <di:waypoint x="530" y="120" />
+        <di:waypoint x="780" y="120" />
+        <di:waypoint x="780" y="259" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vxhu58_di" bpmnElement="Flow_0vxhu58">
+        <di:waypoint x="530" y="277" />
+        <di:waypoint x="600" y="277" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_127z64f_di" bpmnElement="Flow_127z64f">
+        <di:waypoint x="700" y="277" />
+        <di:waypoint x="762" y="277" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16mcipa_di" bpmnElement="Flow_16mcipa">
+        <di:waypoint x="798" y="277" />
+        <di:waypoint x="842" y="277" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

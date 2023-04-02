@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="TFGDemoDecisions" name="TFGDemoDecisions" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.6.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.18.0">
+  <decision id="BepaalStatusDecision" name="BepaalStatus">
+    <decisionTable id="DecisionTable_15lxm0d">
+      <input id="Input_1" camunda:inputVariable="contact">
+        <inputExpression id="InputExpression_1" typeRef="string">
+          <text>eindStatus</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" name="procesStatus" typeRef="string" />
+      <rule id="DecisionRule_1dwi1hf">
+        <inputEntry id="UnaryTests_15gbdtt">
+          <text>"goedkeuren"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0u97fa2">
+          <text>"GOEDGEKEURD"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_11ckuca">
+        <inputEntry id="UnaryTests_091bwxg">
+          <text>"afkeuren"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0z9vupk">
+          <text>"AFGEKEURD"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="BepaalStatusDecision">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
