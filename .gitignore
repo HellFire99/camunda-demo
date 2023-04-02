@@ -31,3 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/camunda-h2-database.mv.db
